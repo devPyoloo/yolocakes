@@ -1,0 +1,41 @@
+data_name: "test"
+labels: ["cake", "rat"]
+yolo_layer_number: 3 # 1 or 2 or 3. By default it's 3.
+
+img_aug_nums:
+# Format: [l, r] means uniformly select a value Implicitly between [l, r]
+  "num_new_images": 500 # How many training images with labels we want to generate 
+  "objects_per_image": [0, 6] # How many objects per image
+
+yolo:
+  "ratio_train": 0.8 # percentage of images for training (in "train.txt"); The rest goes into "valid.txt".
+
+yolo_inference:
+  "conf_thres": 0.95 # object confidence threshold
+  "nms_thres": 0.5  # iou thresshold for non-maximum suppression
+  "batch_size": 4 # size of the batches   when reading images. Used in src/detect_images.py
+  "n_cpu": 4      # number of cpus to use when reading images. Used in src/detect_images.py
+  "img_size": 416 # size of each image dimension. 
+                  # WARNING: Currently the image must be a square. 
+                  # What's worse, the setting for img_size is in a chaos (It's set in multiple places). 
+                  # If you want to change image size, you need to search for all (e.g. 416) and replace them all. 
+                  
+template_aug_effects: 
+  "rela_size" :  [0.03, 0.15] # template's relative size wrt background image
+  "rescale" : [1.0, 1.8] # rescale template
+  "rotation" : [-90, 90] # rotate template
+  "shear" : [-0.25, 0.25] # shear template
+  "translate_x" : [0, 1] # translate template on the background image.
+  "translate_y" : [0, 1] #    (x=0, y=0) is left-up, and (x=1, y=1) is bottom-right corner
+  "brightness_offset" : [-30, 30] # inc/decrease the brightness of template image
+
+# ------------- Usually, the following settings doens't need change.
+# ------------- If does, please set them directly in the .py script
+
+#background_aug_effects: 
+#  which_script: "utils/lib_augment_image.py"
+#  which_function": "def _set_args_for_background_augment"
+
+#important_file_paths:
+#  which_script: "config/config.py"
+#  which_function: "def set_fixed_arguments"

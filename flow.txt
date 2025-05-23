@@ -1,0 +1,25 @@
+## Step 1: Prepare Template Images
+```terminal
+python prepare.py
+```
+1. Enter **project name**
+2. Add images one by one:
+   - **Image path** → Enter full path to image
+   - **Class name** → Enter object class (e.g., "cake", "bottle")
+   - Repeat for all images
+3. Press **Enter** (empty input) to start processing
+
+## Step 2: Configure Training Settings
+config/config.yaml
+```
+- Modify `num_new_images` count (default: 500)
+
+## Step 3: Generate Dataset
+```bash terminal
+bash main_setup.sh
+```
+- Creates folder: `{project_name}_generated`
+- Contains your training dataset for yolo ("train", "val" folders and "classes.txt")
+
+---
+**Summary:** Run prepare.py → Add images & classes → Edit config.yaml → Run main_setup.sh
