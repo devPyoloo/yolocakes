@@ -1,57 +1,112 @@
-OLO Synthetic Dataset Preparation and Training Pipeline
-This repository provides a pipeline to prepare template images, generate masks, augment data, and set up a YOLO training dataset for custom object detection tasks.
+# YOLO Cakes: Dataset Preparation & Augmentation Pipeline
 
-Features
-Interactive Template Preparation: Easily add images and assign class names, with automatic background removal using transparent-background.
-Automatic Mask Generation: Generates binary masks for each template image.
-Configurable Data Augmentation: Randomly places templates on backgrounds with configurable transformations.
-YOLO Dataset Structure: Automatically splits data into train/val sets and generates YOLO config files.
-Verification Tools: Visualize masks and overlays for quality control.
-Quick Start
-1. Prepare Template Images
-Run the interactive preparation tool:
+This repository provides a pipeline to prepare template images, generate masks, augment data, and set up a YOLO-compatible dataset structure for object detection tasks.
+
+---
+
+## Workflow Overview
+
+1. **Prepare Template Images & Masks**
+   - Run the interactive tool to add your template images and assign class names.
+   - The tool uses [transparent-background](https://github.com/OPHoperHPO/transparent-background) to automatically generate object masks.
+
+2. **Edit Training Configuration**
+   - Modify `config/config.yaml` to adjust parameters such as the number of generated images, object classes, and augmentation settings.
+
+3. **Generate Augmented Dataset**
+   - Run the main setup script to create a synthetic dataset with random backgrounds, object placements, and bounding box annotations.
+
+---
+
+## Step-by-Step Usage
+
+### 1. Prepare Template Images
+
+```sh
 python prepare.py
+```
 
-Enter your project name (e.g., cakes).
-Add images one by one:
-Enter the full path to each image.
-Assign a class name (e.g., cake, bottle).
-Press Enter on an empty prompt to finish.
+- Enter your **project name** (e.g., `cakes_project`).
+- Add images one by one:
+  - **Image path**: Full path to your image file.
+  - **Class name**: Object class (e.g., `cake`, `bottle`).
+- Press **Enter** on an empty line to finish and start processing.
+
 This will:
+- Copy your images to `data/{project_name}/template_img/`
+- Generate masks in `data/{project_name}/template_mask/`
+- Optionally copy a background image folder for augmentation.
 
-Copy your images to data/{project_name}/template_img/
-Generate masks in data/{project_name}/template_mask/
-Copy background images to data/{project_name}/background/ (auto-detected or specify with --background_path)
-Optionally update config.yaml with your project and class names.
-2. Configure Training Settings
-Edit config.yaml:
+### 2. Configure Training Settings
 
-Set num_new_images to the number of synthetic images you want to generate.
-Adjust augmentation parameters as needed.
-3. Generate Dataset
-Run the main setup script:
+Edit `config/config.yaml`:
+
+- Set `num_new_images` to the number of synthetic images to generate.
+- Adjust `labels` and augmentation parameters as needed.
+
+### 3. Generate Dataset
+
+Run the setup script:
+
+```sh
 bash main_setup.sh
+```
 
 This will:
+- Augment images by placing templates on random backgrounds.
+- Generate YOLO-format bounding box annotations.
+- Split the dataset into `train` and `val` folders.
+- Write YOLO config files (`yolo.cfg`, `yolo.data`, `classes.txt`).
 
-Augment images and generate YOLO-format dataset in data/{project_name}_generated/
-Split data into train and val folders
-Generate classes.txt, train.txt, val.txt, and YOLO config files
-File Structure
-Advanced Usage
-Batch Mode: You can run prepare.py with arguments for batch processing:
-Verification: Use the --create_verification flag to generate overlay images for mask quality checking.
-Requirements
-See requirements.txt for all dependencies. Install with:
+---
 
-References
-transparent-background
-YOLOv3
-Workflow Summary
-Run prepare.py → Add images & classes → Masks and folders auto-generated.
-Edit config.yaml → Set project name, labels, and augmentation settings.
-Run main_setup.sh → Generates YOLO dataset and config files.
-For more details, see the comments in flow.txt and the docstrings in each script.
+## Output Structure
 
-Happy training!
+After running the pipeline, your dataset will be organized as follows:
 
+```
+data/
+  {project_name}_generated/
+    train/
+      images/
+      labels/
+    val/
+      images/
+      labels/
+    classes.txt
+    yolo.cfg
+    yolo.data
+    train.txt
+    val.txt
+```
+
+---
+
+## Main Scripts
+
+- `prepare.py`: Interactive tool for template image and mask preparation.
+- `main_setup.py`: Main pipeline for augmentation and dataset setup.
+- `main_setup.sh`: Bash script to run the full pipeline.
+
+---
+
+## Requirements
+
+Install dependencies with:
+
+```sh
+pip install -r requirements.txt
+```
+
+---
+
+## References
+
+- [transparent-background](https://github.com/OPHoperHPO/transparent-background)
+- [YOLOv3](https://pjreddie.com/darknet/yolo/)
+
+---
+
+**Quick Start Summary:**  
+Run `prepare.py` → Add images & classes → Edit `config/config.yaml` → Run `main_setup.sh`  
+Your YOLO dataset will be ready for training!
